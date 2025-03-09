@@ -1,8 +1,16 @@
 import Image from "next/image";
 
-export default function Home() {
-  throw new Error("Random 50% chance error!");
+export default async function Home() {
+  const data = await fetch('https://jsonplaceholder.typicode.com/todos')
+    .then(response => response.json())
 
+  const todos = data.map(x => ({
+    userId: x.userId,
+    id: x.id,
+    title: x.title,
+    completed: x.completed,
+    cost: x.cost * 2
+  }));
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -25,6 +33,18 @@ export default function Home() {
           </li>
           <li>Save and see your changes instantly.</li>
         </ol>
+
+        {/* Displaying the todos fetched from the API */}
+        <div className="flex flex-col gap-4">
+          <h2 className="text-lg font-semibold">Fetched Todos:</h2>
+          <ul className="list-disc list-inside">
+            {todos.map((todo) => (
+              <li key={todo.id} className="mb-2">
+                <span className="font-semibold">{todo.title}</span> - {todo.completed ? 'Completed' : 'Not Completed'}
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <a
