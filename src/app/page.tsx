@@ -1,10 +1,18 @@
 import Image from "next/image";
 
+interface Todo {
+  userId: number;
+  id: number;
+  title: string;
+  completed: boolean;
+  cost: number;
+}
+
 export default async function Home() {
   const data = await fetch('https://jsonplaceholder.typicode.com/todos')
-    .then(response => response.json())
+    .then(response => response.json()) as Todo[];
 
-  const todos = data.map(x => ({
+  const todos: Todo[] = data.map(x => ({
     userId: x.userId,
     id: x.id,
     title: x.title,
@@ -41,6 +49,7 @@ export default async function Home() {
             {todos.map((todo) => (
               <li key={todo.id} className="mb-2">
                 <span className="font-semibold">{todo.title}</span> - {todo.completed ? 'Completed' : 'Not Completed'}
+                <span>{todo.cost}</span>
               </li>
             ))}
           </ul>
